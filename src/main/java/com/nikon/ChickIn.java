@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ChickIn extends OpenAndLogIn {
@@ -35,6 +36,7 @@ public class ChickIn extends OpenAndLogIn {
     System.setProperty("webdriver.edge.driver", driverPath);
 
     EdgeOptions options = new EdgeOptions();
+    options.addArguments("--headless");
     options.addArguments("--start-maximized");
 
     EdgeDriver driver = new EdgeDriver(options);
@@ -49,8 +51,7 @@ public class ChickIn extends OpenAndLogIn {
       doCheckIn(driver);
 
       if (waitForExit) {
-        logger.info("按 Enter 键退出并关闭浏览器...");
-        System.in.read();
+        logger.info("CheckIn 流程完成，程序即将关闭...");
       }
     } catch (Exception e) {
       logger.error("自动化过程中发生异常:", e);
@@ -84,6 +85,7 @@ public class ChickIn extends OpenAndLogIn {
 
     waitForPageLoaded(driver);
     logger.info("页面加载完成");
+    Thread.sleep(2000);
 
     // 查找第一个 span 元素并点击11次
     logger.info("开始点击点赞按钮...");
@@ -99,6 +101,7 @@ public class ChickIn extends OpenAndLogIn {
     }
 
     logger.info("已完成11次点击");
+
   }
 
   private static void loadCredentialsAndLogin(WebDriver driver) throws Exception {

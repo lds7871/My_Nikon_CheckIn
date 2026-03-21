@@ -40,6 +40,7 @@ public class OpenAndLogIn {
     System.setProperty("webdriver.edge.driver", driverPath);
 
     EdgeOptions options = new EdgeOptions();
+    options.addArguments("--headless");
     options.addArguments("--start-maximized");
 
     EdgeDriver driver = new EdgeDriver(options);
@@ -103,8 +104,7 @@ public class OpenAndLogIn {
   }
 
   private static void waitForUserExit() throws Exception {
-    logger.info("按 Enter 键退出并关闭浏览器...");
-    System.in.read();
+    logger.info("登录流程完成，程序即将关闭...");
   }
 
   private static Map<String, String> loadCredentials() throws Exception {
