@@ -65,7 +65,8 @@ public class ChickIn extends OpenAndLogIn {
     logger.info("开始 CheckIn 流程...");
 
     // 等待页面加载
-    Thread.sleep(3000);
+    long baseWaitTime = loadBaseWaitTime();
+    Thread.sleep(3000 + baseWaitTime);
     // 等待 entcheck-dat 元素出现并可点击
     WebDriverWait wait = new WebDriverWait(driver, PAGE_TIMEOUT);
     WebElement checkInButton = wait.until(
@@ -76,7 +77,7 @@ public class ChickIn extends OpenAndLogIn {
     logger.info("已点击 CheckIn 按钮");
 
     // 线程等待2秒
-    Thread.sleep(2000);
+    Thread.sleep(2000 + baseWaitTime);
     logger.info("等待2秒完成");
 
     // 跳转到指定URL
@@ -85,18 +86,18 @@ public class ChickIn extends OpenAndLogIn {
 
     waitForPageLoaded(driver);
     logger.info("页面加载完成");
-    Thread.sleep(2000);
+    Thread.sleep(2000 + baseWaitTime);
 
-    // 查找第一个 span 元素并点击11次
+    // 查找第一个 viewers-reaction 元素并点击11次
     logger.info("开始点击点赞按钮...");
     for (int i = 0; i < 11; i++) {
-      WebElement likeElement = driver.findElement(By.xpath("//span[@class='ic-like']"));
+      WebElement likeElement = driver.findElement(By.className("viewers-reaction"));
       likeElement.click();
       logger.info("第 {} 次点击完成", i + 1);
 
       // 每0.3秒点击一次（除了最后一次）
       if (i < 10) {
-        Thread.sleep(300);
+        Thread.sleep(300 + baseWaitTime);
       }
     }
 
@@ -134,31 +135,5 @@ public class ChickIn extends OpenAndLogIn {
     // 等待页面加载
     waitForPageLoaded(driver);
     logger.info("登录完成");
-  }
-
-  private static void waitForPageLoaded(WebDriver driver) {
-    new WebDriverWait(driver, PAGE_TIMEOUT).until(
-        webDriver -> ((JavascriptExecutor) webDriver)
-            .executeScript("return document.readyState").equals("complete"));
-  }
-
-  private static String getEdgeDriverPath() {
-    return Paths.get(System.getProperty("user.dir"), "edgedriver_win64", "msedgedriver.exe").toString();
-  }
-
-  private static Map<String, String> loadCredentials() throws Exception {
-    Map<String, String> credentials = new HashMap<>();
-    String configFile = Paths.get(System.getProperty("user.dir"), "账号密码配置.txt").toString();
-
-    Files.readAllLines(Paths.get(configFile), StandardCharsets.UTF_8).forEach(line -> {
-      if (line.contains("=")) {
-        String[] parts = line.split("=", 2);
-        if (parts.length == 2) {
-          credentials.put(parts[0].trim(), parts[1].trim());
-        }
-      }
-    });
-
-    return credentials;
   }
 }

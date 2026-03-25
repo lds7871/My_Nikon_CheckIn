@@ -26,7 +26,8 @@ public class PostShare extends OpenAndLogIn {
     // 等待页面加载
     waitForPageLoaded(driver);
     logger.info("页面加载完成");
-    Thread.sleep(2000);
+    long baseWaitTime = loadBaseWaitTime();
+    Thread.sleep(2000 + baseWaitTime);
 
     // 点击第三个 class="ic-external" 的元素
     List<WebElement> externalButtons = driver.findElements(By.className("ic-external"));
@@ -39,14 +40,14 @@ public class PostShare extends OpenAndLogIn {
     }
 
     // 等待弹窗出现
-    Thread.sleep(1000);
+    Thread.sleep(1000 + baseWaitTime);
 
     // 点击 class="modal-share_icon modal-share_icon-wechat" 的元素
     WebElement wechatShareButton = driver.findElement(By.className("modal-share_icon-wechat"));
     wechatShareButton.click();
     logger.info("已点击微信分享按钮");
 
-    Thread.sleep(1000);
+    Thread.sleep(1000 + baseWaitTime);
 
     // 点击第一个 class="modal-share_icon" 的元素
     List<WebElement> shareIcons = driver.findElements(By.className("modal-share_icon"));
@@ -59,11 +60,5 @@ public class PostShare extends OpenAndLogIn {
     }
 
     logger.info("帖子分享流程完成");
-  }
-
-  private static void waitForPageLoaded(WebDriver driver) {
-    new WebDriverWait(driver, PAGE_TIMEOUT).until(
-        webDriver -> ((JavascriptExecutor) webDriver)
-            .executeScript("return document.readyState").equals("complete"));
   }
 }

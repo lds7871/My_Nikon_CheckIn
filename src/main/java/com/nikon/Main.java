@@ -24,7 +24,7 @@ public class Main {
     System.setProperty("webdriver.edge.driver", driverPath);
 
     EdgeOptions options = new EdgeOptions();
-    options.addArguments("--headless");
+    // options.addArguments("--headless");
     options.addArguments("--start-maximized");
 
     EdgeDriver driver = new EdgeDriver(options);
@@ -41,9 +41,14 @@ public class Main {
       logger.info("登录完成，执行 CheckIn 流程...");
       ChickIn.doCheckIn(driver);
 
-      // 执行帖子分享流程
-      logger.info("CheckIn 完成，执行帖子分享流程...");
-      PostShare.doPostShare(driver);
+      // 执行帖子分享流程--暂时关闭
+      // logger.info("CheckIn 完成，执行帖子分享流程...");
+      // PostShare.doPostShare(driver);
+
+      // ============评论流程在下方引入
+      logger.info("CheckIn 完成，执行评论流程...");
+      PostComment.doComment(driver);
+      // ============
 
       logger.info("所有流程执行完毕，程序即将关闭...");
     } catch (Exception e) {

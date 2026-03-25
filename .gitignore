@@ -31,3 +31,5 @@ Thumbs.db
 *.class
 *.log
 
+# Configuration files with sensitive data
+账号密码配置.txt

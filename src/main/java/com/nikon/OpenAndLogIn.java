@@ -93,13 +93,26 @@ public class OpenAndLogIn {
     logger.info("登录完成，页面已加载");
   }
 
-  private static void waitForPageLoaded(WebDriver driver) {
+  protected static void waitForPageLoaded(WebDriver driver) {
     new WebDriverWait(driver, PAGE_TIMEOUT).until(
         webDriver -> ((JavascriptExecutor) webDriver)
             .executeScript("return document.readyState").equals("complete"));
   }
 
-  private static String getEdgeDriverPath() {
+  protected static long loadBaseWaitTime() {
+    try {
+      Map<String, String> config = loadCredentials();
+      String baseWaitTimeStr = config.get("基础等待时间");
+      if (baseWaitTimeStr != null && !baseWaitTimeStr.isBlank()) {
+        return Long.parseLong(baseWaitTimeStr.trim());
+      }
+    } catch (Exception e) {
+      logger.warn("读取基础等待时间失败，使用默认值 0", e);
+    }
+    return 0;
+  }
+
+  protected static String getEdgeDriverPath() {
     return Paths.get(System.getProperty("user.dir"), "edgedriver_win64", "msedgedriver.exe").toString();
   }
 
@@ -107,7 +120,7 @@ public class OpenAndLogIn {
     logger.info("登录流程完成，程序即将关闭...");
   }
 
-  private static Map<String, String> loadCredentials() throws Exception {
+  protected static Map<String, String> loadCredentials() throws Exception {
     Map<String, String> credentials = new HashMap<>();
     String configFile = Paths.get(System.getProperty("user.dir"), "账号密码配置.txt").toString();
 
