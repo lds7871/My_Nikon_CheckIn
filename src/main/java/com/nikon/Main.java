@@ -24,7 +24,7 @@ public class Main {
     System.setProperty("webdriver.edge.driver", driverPath);
 
     EdgeOptions options = new EdgeOptions();
-    // options.addArguments("--headless");
+    options.addArguments("--headless");
     options.addArguments("--start-maximized");
 
     EdgeDriver driver = new EdgeDriver(options);
