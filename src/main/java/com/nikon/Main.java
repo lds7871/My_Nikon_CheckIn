@@ -29,23 +29,23 @@ public class Main {
 
     EdgeDriver driver = new EdgeDriver(options);
     try {
-      // 打开登录页面
+      // ============打开登录页面
       logger.info("Edge 浏览器已启动，打开登录页面...");
       driver.get("https://my.nikon.com.cn/user/level/task");
 
-      // 执行登录流程
+      // ============执行登录流程
       logger.info("执行登录流程...");
       OpenAndLogIn.doLogin(driver);
 
-      // 执行 CheckIn 流程（在同一个浏览器会话里）
+      // CheckIn 流程
       logger.info("登录完成，执行 CheckIn 流程...");
       ChickIn.doCheckIn(driver);
 
-      // 执行帖子分享流程--暂时关闭
+      // ===========帖子分享流程--暂时关闭
       // logger.info("CheckIn 完成，执行帖子分享流程...");
       // PostShare.doPostShare(driver);
 
-      // ============评论流程在下方引入
+      // ============评论流程
       logger.info("CheckIn 完成，执行评论流程...");
       PostComment.doComment(driver);
       // ============
