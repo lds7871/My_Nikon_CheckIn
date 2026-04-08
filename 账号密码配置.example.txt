@@ -1,3 +1,4 @@
 手机号=your_phone_number
 密码=your_password
+无头模式=F
 基础等待时间=1

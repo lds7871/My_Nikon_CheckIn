@@ -7,7 +7,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Console;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
   static {
@@ -23,8 +27,15 @@ public class Main {
     logger.info("使用 Edge 驱动: {}", driverPath);
     System.setProperty("webdriver.edge.driver", driverPath);
 
+    // 读取配置
+    Map<String, String> config = loadConfig();
+    boolean headlessMode = isHeadlessModeEnabled(config);
+    logger.info("无头模式: {}", headlessMode ? "启用" : "禁用");
+
     EdgeOptions options = new EdgeOptions();
-    options.addArguments("--headless");
+    if (headlessMode) {
+      options.addArguments("--headless");
+    }
     options.addArguments("--start-maximized");
 
     EdgeDriver driver = new EdgeDriver(options);
@@ -61,6 +72,29 @@ public class Main {
 
   private static String getEdgeDriverPath() {
     return Paths.get(System.getProperty("user.dir"), "edgedriver_win64", "msedgedriver.exe").toString();
+  }
+
+  private static Map<String, String> loadConfig() {
+    Map<String, String> config = new HashMap<>();
+    try {
+      String configFile = Paths.get(System.getProperty("user.dir"), "账号密码配置.txt").toString();
+      Files.readAllLines(Paths.get(configFile), StandardCharsets.UTF_8).forEach(line -> {
+        if (line.contains("=")) {
+          String[] parts = line.split("=", 2);
+          if (parts.length == 2) {
+            config.put(parts[0].trim(), parts[1].trim());
+          }
+        }
+      });
+    } catch (Exception e) {
+      logger.warn("读取配置文件失败，使用默认配置", e);
+    }
+    return config;
+  }
+
+  private static boolean isHeadlessModeEnabled(Map<String, String> config) {
+    String headlessValue = config.getOrDefault("无头模式", "T");
+    return !headlessValue.equalsIgnoreCase("F");
   }
 
   private static void configureConsoleCharset() {
