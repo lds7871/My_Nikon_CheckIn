@@ -88,9 +88,9 @@ public class ChickIn extends OpenAndLogIn {
     logger.info("页面加载完成");
     Thread.sleep(2000 + baseWaitTime);
 
-    // 查找第一个 viewers-reaction 元素并点击11次
+    // 查找第一个 viewers-reaction 元素并点击17次
     logger.info("开始点击点赞按钮...");
-    for (int i = 0; i < 11; i++) {
+    for (int i = 0; i < 17; i++) {
       WebElement likeElement = driver.findElement(By.className("viewers-reaction"));
       likeElement.click();
       logger.info("第 {} 次点击完成", i + 1);
