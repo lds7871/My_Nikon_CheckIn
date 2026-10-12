@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NikonCheckIn.Gui.MainPage"
+             Title="尼康自动签到"
+             BackgroundColor="#F2F4F7">
+
+    <!-- 左右两栏：左侧为输入与操作，右侧为运行日志 -->
+    <Grid ColumnDefinitions="360,*"
+          Padding="18"
+          ColumnSpacing="18">
+
+        <!-- ==================== 左侧 ==================== -->
+        <Border Grid.Column="0"
+                BackgroundColor="#FFFFFF"
+                Stroke="#E3E6EB"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                Padding="22,24">
+            <Grid RowDefinitions="Auto,Auto,Auto,*,Auto"
+                  RowSpacing="18">
+
+                <!-- 账号 -->
+                <VerticalStackLayout Grid.Row="0" Spacing="7">
+                    <Label Text="账号"
+                           FontSize="13"
+                           TextColor="#5A6272" />
+                    <Entry x:Name="AccountEntry"
+                           Placeholder="请输入手机号"
+                           HeightRequest="42"
+                           BackgroundColor="#F7F8FA"
+                           TextColor="#1F2733"
+                           PlaceholderColor="#9AA3B2"
+                           ClearButtonVisibility="WhileEditing" />
+                </VerticalStackLayout>
+
+                <!-- 密码 -->
+                <VerticalStackLayout Grid.Row="1" Spacing="7">
+                    <Label Text="密码"
+                           FontSize="13"
+                           TextColor="#5A6272" />
+                    <Entry x:Name="PasswordEntry"
+                           Placeholder="请输入密码"
+                           IsPassword="True"
+                           HeightRequest="42"
+                           BackgroundColor="#F7F8FA"
+                           TextColor="#1F2733"
+                           PlaceholderColor="#9AA3B2"
+                           ClearButtonVisibility="WhileEditing" />
+                </VerticalStackLayout>
+
+                <!-- 浏览器适配检查：打开应用时自动执行 -->
+                <VerticalStackLayout Grid.Row="2" Spacing="6">
+                    <Label Text="检查有无适配浏览器"
+                           FontSize="13"
+                           TextColor="#5A6272" />
+                    <Label x:Name="BrowserStatusLabel"
+                           Text="正在检查..."
+                           FontSize="14"
+                           TextColor="#5A6272" />
+                    <Label x:Name="DownloadEdgeLabel"
+                           Text="点此下载 Edge 浏览器"
+                           FontSize="13"
+                           TextColor="#2F6FED"
+                           TextDecorations="Underline"
+                           IsVisible="False">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnDownloadEdgeTapped" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </VerticalStackLayout>
+
+                <!-- 占位，把按钮压到左下角 -->
+                <BoxView Grid.Row="3" Color="Transparent" />
+
+                <!-- 开始签到（左下居中） -->
+                <Button Grid.Row="4"
+                        x:Name="StartButton"
+                        Text="开始签到"
+                        Clicked="OnStartClicked"
+                        HorizontalOptions="Center"
+                        WidthRequest="200"
+                        HeightRequest="46"
+                        FontSize="16"
+                        CornerRadius="8"
+                        BackgroundColor="#2F6FED"
+                        TextColor="#FFFFFF" />
+            </Grid>
+        </Border>
+
+        <!-- ==================== 右侧：日志输出 ==================== -->
+        <Border Grid.Column="1"
+                BackgroundColor="#FFFFFF"
+                Stroke="#E3E6EB"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                Padding="16,14">
+            <Grid RowDefinitions="Auto,*"
+                  RowSpacing="10">
+
+                <Label Grid.Row="0"
+                       Text="签到日志"
+                       FontSize="15"
+                       FontAttributes="Bold"
+                       TextColor="#1F2733" />
+
+                <Border Grid.Row="1"
+                        BackgroundColor="#F7F8FA"
+                        Stroke="#EDEFF3"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="0">
+                    <ScrollView x:Name="LogScrollView"
+                                VerticalScrollBarVisibility="Always">
+                        <Label x:Name="LogLabel"
+                               FontFamily="Consolas"
+                               FontSize="12.5"
+                               TextColor="#2B3240"
+                               Padding="12,10"
+                               LineBreakMode="WordWrap" />
+                    </ScrollView>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+
+</ContentPage>
