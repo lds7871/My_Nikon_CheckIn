@@ -49,20 +49,23 @@
                            ClearButtonVisibility="WhileEditing" />
                 </VerticalStackLayout>
 
-                <!-- 浏览器适配检查：打开应用时自动执行 -->
+                <!-- 浏览器适配检查：打开应用时自动执行（整体居中） -->
                 <VerticalStackLayout Grid.Row="2" Spacing="6">
                     <Label Text="检查有无适配浏览器"
                            FontSize="13"
-                           TextColor="#5A6272" />
+                           TextColor="#5A6272"
+                           HorizontalTextAlignment="Center" />
                     <Label x:Name="BrowserStatusLabel"
                            Text="正在检查..."
                            FontSize="14"
-                           TextColor="#5A6272" />
+                           TextColor="#5A6272"
+                           HorizontalTextAlignment="Center" />
                     <Label x:Name="DownloadEdgeLabel"
                            Text="点此下载 Edge 浏览器"
                            FontSize="13"
                            TextColor="#2F6FED"
                            TextDecorations="Underline"
+                           HorizontalTextAlignment="Center"
                            IsVisible="False">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnDownloadEdgeTapped" />
@@ -70,13 +73,15 @@
                     </Label>
                 </VerticalStackLayout>
 
-                <!-- 无头模式开关 -->
-                <HorizontalStackLayout Grid.Row="3" Spacing="8">
+                <!-- 无头模式开关（开关居左，文字紧邻） -->
+                <HorizontalStackLayout Grid.Row="3" Spacing="4"
+                                       HorizontalOptions="Start">
                     <Switch x:Name="HeadlessSwitch"
                             Toggled="OnHeadlessToggled"
                             OnColor="#2F6FED"
                             ThumbColor="#FFFFFF"
-                            VerticalOptions="Center" />
+                            VerticalOptions="Center"
+                            HorizontalOptions="Start" />
                     <Label Text="无头模式（不显示浏览器窗口）"
                            FontSize="13"
                            TextColor="#3A4252"

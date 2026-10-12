@@ -59,6 +59,8 @@ public partial class MainPage : ContentPage
 	{
 		base.OnAppearing();
 
+		CompactHeadlessSwitch();
+
 		if (_browserChecked)
 		{
 			return;
@@ -72,6 +74,7 @@ public partial class MainPage : ContentPage
 	{
 		base.OnHandlerChanged();
 		EnableLogSelection();
+		CompactHeadlessSwitch();
 	}
 
 	/// <summary>让日志文本可以用鼠标选中（Windows 下 WinUI TextBlock 的文本选择）</summary>
@@ -81,6 +84,24 @@ public partial class MainPage : ContentPage
 		if (LogLabel.Handler?.PlatformView is Microsoft.UI.Xaml.Controls.TextBlock textBlock)
 		{
 			textBlock.IsTextSelectionEnabled = true;
+		}
+#endif
+	}
+
+	/// <summary>
+	/// Windows 的 ToggleSwitch 自带 On/Off 内容区且最小宽度 154，
+	/// 会把旁边的文字推得很远；这里去掉内容区并解除最小宽度，让文字紧贴开关。
+	/// </summary>
+	private void CompactHeadlessSwitch()
+	{
+#if WINDOWS
+		if (HeadlessSwitch.Handler?.PlatformView is Microsoft.UI.Xaml.Controls.ToggleSwitch toggle)
+		{
+			toggle.OnContent = null;
+			toggle.OffContent = null;
+			toggle.MinWidth = 0;
+			toggle.Padding = new Microsoft.UI.Xaml.Thickness(0);
+			toggle.Margin = new Microsoft.UI.Xaml.Thickness(0);
 		}
 #endif
 	}
