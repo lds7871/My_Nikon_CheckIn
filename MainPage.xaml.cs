@@ -1,3 +1,4 @@
+using Microsoft.Maui.ApplicationModel.DataTransfer;
 using NikonCheckIn.Gui.Services;
 using NikonCheckIn.Models;
 
@@ -47,6 +48,23 @@ public partial class MainPage : ContentPage
 		CheckBrowser();
 	}
 
+	protected override void OnHandlerChanged()
+	{
+		base.OnHandlerChanged();
+		EnableLogSelection();
+	}
+
+	/// <summary>让日志文本可以用鼠标选中（Windows 下 WinUI TextBlock 的文本选择）</summary>
+	private void EnableLogSelection()
+	{
+#if WINDOWS
+		if (LogLabel.Handler?.PlatformView is Microsoft.UI.Xaml.Controls.TextBlock textBlock)
+		{
+			textBlock.IsTextSelectionEnabled = true;
+		}
+#endif
+	}
+
 	// ============================ 日志 ============================
 
 	private void OnLogEntryWritten(UiLogEntry entry)
@@ -70,7 +88,33 @@ public partial class MainPage : ContentPage
 			spans.RemoveAt(0);
 		}
 
+		// FormattedText 更新后重新确保日志可选中
+		EnableLogSelection();
+
 		_ = LogScrollView.ScrollToAsync(LogLabel, ScrollToPosition.End, false);
+	}
+
+	/// <summary>把整份日志复制到剪贴板，便于把报错内容发出去</summary>
+	private async void OnCopyLogClicked(object? sender, EventArgs e)
+	{
+		var text = string.Concat(LogLabel.FormattedText.Spans.Select(s => s.Text));
+
+		if (string.IsNullOrWhiteSpace(text))
+		{
+			_logSink.Write(UiLogLevel.Warning, "当前没有日志可复制。");
+			return;
+		}
+
+		try
+		{
+			await Clipboard.Default.SetTextAsync(text);
+			var lines = text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).Length;
+			_logSink.Write(UiLogLevel.Success, $"已复制 {lines} 行日志到剪贴板。");
+		}
+		catch (Exception ex)
+		{
+			_logSink.Write(UiLogLevel.Error, $"复制日志失败: {ex.Message}");
+		}
 	}
 
 	private static Color ColorFor(UiLogLevel level) => level switch

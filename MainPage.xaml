@@ -98,11 +98,25 @@
             <Grid RowDefinitions="Auto,*"
                   RowSpacing="10">
 
-                <Label Grid.Row="0"
-                       Text="签到日志"
-                       FontSize="15"
-                       FontAttributes="Bold"
-                       TextColor="#1F2733" />
+                <Grid Grid.Row="0"
+                      ColumnDefinitions="*,Auto">
+                    <Label Text="签到日志"
+                           FontSize="15"
+                           FontAttributes="Bold"
+                           TextColor="#1F2733"
+                           VerticalOptions="Center" />
+                    <Button Grid.Column="1"
+                            x:Name="CopyLogButton"
+                            Text="复制日志"
+                            Clicked="OnCopyLogClicked"
+                            FontSize="13"
+                            HeightRequest="32"
+                            WidthRequest="92"
+                            Padding="0"
+                            CornerRadius="6"
+                            BackgroundColor="#EEF2FA"
+                            TextColor="#2F6FED" />
+                </Grid>
 
                 <Border Grid.Row="1"
                         BackgroundColor="#F7F8FA"

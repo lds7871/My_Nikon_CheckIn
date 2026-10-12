@@ -58,10 +58,28 @@ public sealed class UiLogSink : ILoggerProvider
 			var message = formatter(state, exception);
 			if (exception is not null)
 			{
-				message = $"{message} | {exception.Message}";
+				// 把异常类型与内部异常一起写出来，方便直接复制报错内容排查
+				message = $"{message} | {Describe(exception)}";
 			}
 
 			owner.Emit(logLevel, message);
+		}
+
+		private static string Describe(Exception exception)
+		{
+			var builder = new System.Text.StringBuilder();
+			builder.Append(exception.GetType().Name).Append(": ").Append(exception.Message);
+
+			var inner = exception.InnerException;
+			var depth = 0;
+			while (inner is not null && depth < 5)
+			{
+				builder.Append(" <- ").Append(inner.GetType().Name).Append(": ").Append(inner.Message);
+				inner = inner.InnerException;
+				depth++;
+			}
+
+			return builder.ToString();
 		}
 	}
 }
