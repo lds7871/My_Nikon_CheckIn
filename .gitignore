@@ -20,6 +20,13 @@ dependency-reduced-pom.xml
 *.swo
 *~
 
+# Visual Studio / Rider
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
 # OS
 .DS_Store
 Thumbs.db
@@ -33,5 +40,9 @@ Thumbs.db
 *.class
 *.log
 
+# 发布产物（bin/、obj/ 已在上面忽略，这里兜底自定义输出目录）
+[Pp]ublish/
+
 # Configuration files with sensitive data
 账号密码配置.txt
+登录信息.txt

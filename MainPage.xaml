@@ -93,7 +93,7 @@
                         x:Name="SaveLoginButton"
                         Text="保存账号密码"
                         Clicked="OnSaveLoginClicked"
-                        HorizontalOptions="Start"
+                        HorizontalOptions="Center"
                         WidthRequest="140"
                         HeightRequest="34"
                         FontSize="13"

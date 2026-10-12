@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<!-- 仅构建 Windows 桌面（WinUI 3）窗口程序 -->
-		<TargetFrameworks>net10.0-windows10.0.19041.0</TargetFrameworks>
+		<TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>NikonCheckIn.Gui</RootNamespace>
@@ -27,11 +27,32 @@
 
 		<SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+
+		<!-- 发布配置：自包含（目标机器无需预装 .NET 与 Windows App SDK） -->
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<SelfContained>true</SelfContained>
+		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+		<DebugType>embedded</DebugType>
+
+		<!-- 文件夹发布：所有文件与 exe 同目录，运行时零解压、不写用户目录 -->
+		<PublishSingleFile>false</PublishSingleFile>
 	</PropertyGroup>
 
+	<!--
+		只发布 Windows x64 的 node 运行时。
+		Microsoft.Playwright 的 NuGet 包里带了 linux-x64 / linux-arm64 / darwin-x64 / darwin-arm64 / win32_x64
+		五个平台的 node（合计约 516MB），另外四个用不到，排除掉可省约 437MB。
+	-->
+	<Target Name="TrimPlaywrightNodeRuntimes" AfterTargets="ComputeResolvedFilesToPublishList">
+		<ItemGroup>
+			<ResolvedFileToPublish Remove="@(ResolvedFileToPublish)"
+			                       Condition="$([System.String]::Copy('%(ResolvedFileToPublish.RelativePath)').StartsWith('.playwright\node\')) And !$([System.String]::Copy('%(ResolvedFileToPublish.RelativePath)').StartsWith('.playwright\node\win32_x64\'))" />
+		</ItemGroup>
+	</Target>
+
 	<ItemGroup>
-		<!-- 应用图标 -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#2F6FED" />
+		<!-- 应用图标（NK_ChickIn_icon.png，256x256 带透明通道） -->
+		<MauiIcon Include="Resources\AppIcon\appicon.png" />
 
 		<!-- 启动图 -->
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#F2F4F7" BaseSize="128,128" />
