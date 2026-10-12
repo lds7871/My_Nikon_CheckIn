@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 
 namespace NikonCheckIn.Gui.Services;
@@ -20,18 +21,49 @@ public sealed record UiLogEntry(DateTime Time, UiLogLevel Level, string Message)
 /// </summary>
 public sealed class UiLogSink : ILoggerProvider
 {
+	/// <summary>手机号：138****5678（前后仅排除数字，避免紧贴中文时漏打码）</summary>
+	private static readonly Regex PhonePattern = new(@"(?<!\d)1[3-9]\d{9}(?!\d)", RegexOptions.Compiled);
+
+	/// <summary>需要打码的敏感内容（如密码），命中后整体替换</summary>
+	private readonly List<string> _secrets = new();
+
 	/// <summary>有新日志产生（可能在后台线程）</summary>
 	public event Action<UiLogEntry>? EntryWritten;
 
+	/// <summary>注册需要打码的敏感内容；太短的会误伤日志，直接忽略</summary>
+	public void RegisterSecret(string? secret)
+	{
+		if (!string.IsNullOrWhiteSpace(secret) && secret.Length >= 6 && !_secrets.Contains(secret))
+		{
+			_secrets.Add(secret);
+		}
+	}
+
 	/// <summary>直接写入一条界面日志（不经过 ILogger）</summary>
 	public void Write(UiLogLevel level, string message)
-		=> EntryWritten?.Invoke(new UiLogEntry(DateTime.Now, level, message));
+		=> EntryWritten?.Invoke(new UiLogEntry(DateTime.Now, level, Mask(message)));
 
 	public ILogger CreateLogger(string categoryName) => new SinkLogger(this);
 
 	public void Dispose()
 	{
 	}
+
+	/// <summary>日志里的手机号与已注册的敏感内容一律打码</summary>
+	private string Mask(string text)
+	{
+		var masked = PhonePattern.Replace(text, match => MaskPhone(match.Value));
+
+		foreach (var secret in _secrets)
+		{
+			masked = masked.Replace(secret, "******", StringComparison.Ordinal);
+		}
+
+		return masked;
+	}
+
+	private static string MaskPhone(string phone)
+		=> phone.Length == 11 ? $"{phone[..3]}****{phone[7..]}" : "****";
 
 	private void Emit(LogLevel level, string message)
 		=> Write(level switch

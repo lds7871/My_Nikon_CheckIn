@@ -17,7 +17,7 @@
                 StrokeThickness="1"
                 StrokeShape="RoundRectangle 12"
                 Padding="22,24">
-            <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto"
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto"
                   RowSpacing="18">
 
                 <!-- 账号 -->
@@ -26,7 +26,7 @@
                            FontSize="13"
                            TextColor="#5A6272" />
                     <Entry x:Name="AccountEntry"
-                           Placeholder="请输入手机号"
+                           Placeholder="如不信任，请设置环境变量NK-ZH"
                            HeightRequest="42"
                            BackgroundColor="#F7F8FA"
                            TextColor="#1F2733"
@@ -40,7 +40,7 @@
                            FontSize="13"
                            TextColor="#5A6272" />
                     <Entry x:Name="PasswordEntry"
-                           Placeholder="请输入密码"
+                           Placeholder="如不信任，请设置环境变量NK-PW"
                            IsPassword="True"
                            HeightRequest="42"
                            BackgroundColor="#F7F8FA"
@@ -88,11 +88,25 @@
                            VerticalOptions="Center" />
                 </HorizontalStackLayout>
 
+                <!-- 保存账号密码：只有点这个按钮才会写入本机存档（空值也会保存，相当于清空记录） -->
+                <Button Grid.Row="4"
+                        x:Name="SaveLoginButton"
+                        Text="保存账号密码"
+                        Clicked="OnSaveLoginClicked"
+                        HorizontalOptions="Start"
+                        WidthRequest="140"
+                        HeightRequest="34"
+                        FontSize="13"
+                        Padding="0"
+                        CornerRadius="6"
+                        BackgroundColor="#EEF2FA"
+                        TextColor="#2F6FED" />
+
                 <!-- 占位，把按钮压到左下角 -->
-                <BoxView Grid.Row="4" Color="Transparent" />
+                <BoxView Grid.Row="5" Color="Transparent" />
 
                 <!-- 开始签到（左下居中） -->
-                <Button Grid.Row="5"
+                <Button Grid.Row="6"
                         x:Name="StartButton"
                         Text="开始签到"
                         Clicked="OnStartClicked"
