@@ -21,6 +21,9 @@ public partial class MainPage : ContentPage
 	private bool _running;
 	private bool _browserChecked;
 
+	/// <summary>界面初始化完成前，开关的赋值不写日志</summary>
+	private bool _uiReady;
+
 	public MainPage()
 	{
 		InitializeComponent();
@@ -31,7 +34,24 @@ public partial class MainPage : ContentPage
 		_logSink.EntryWritten += OnLogEntryWritten;
 
 		LoadConfig();
+
+		// 开关初值跟随配置（账号密码配置.txt 的“无头模式”）
+		HeadlessSwitch.IsToggled = _config.HeadlessMode;
+
 		WriteStartupLog();
+		_uiReady = true;
+	}
+
+	/// <summary>无头模式开关</summary>
+	private void OnHeadlessToggled(object? sender, ToggledEventArgs e)
+	{
+		_config.HeadlessMode = e.Value;
+
+		if (_uiReady)
+		{
+			_logSink.Write(UiLogLevel.Info,
+				$"无头模式: {(e.Value ? "启用（不显示浏览器窗口）" : "禁用（显示浏览器窗口）")}");
+		}
 	}
 
 	/// <summary>打开应用时自动检查浏览器适配情况</summary>

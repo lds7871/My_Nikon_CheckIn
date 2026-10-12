@@ -17,7 +17,7 @@
                 StrokeThickness="1"
                 StrokeShape="RoundRectangle 12"
                 Padding="22,24">
-            <Grid RowDefinitions="Auto,Auto,Auto,*,Auto"
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto"
                   RowSpacing="18">
 
                 <!-- 账号 -->
@@ -70,11 +70,24 @@
                     </Label>
                 </VerticalStackLayout>
 
+                <!-- 无头模式开关 -->
+                <HorizontalStackLayout Grid.Row="3" Spacing="8">
+                    <Switch x:Name="HeadlessSwitch"
+                            Toggled="OnHeadlessToggled"
+                            OnColor="#2F6FED"
+                            ThumbColor="#FFFFFF"
+                            VerticalOptions="Center" />
+                    <Label Text="无头模式（不显示浏览器窗口）"
+                           FontSize="13"
+                           TextColor="#3A4252"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+
                 <!-- 占位，把按钮压到左下角 -->
-                <BoxView Grid.Row="3" Color="Transparent" />
+                <BoxView Grid.Row="4" Color="Transparent" />
 
                 <!-- 开始签到（左下居中） -->
-                <Button Grid.Row="4"
+                <Button Grid.Row="5"
                         x:Name="StartButton"
                         Text="开始签到"
                         Clicked="OnStartClicked"
